@@ -4,3 +4,16 @@
   margin-top: 2%;
   text-align: center;
 }
+
+.box {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #000;
+  margin: 10px;
+}
+
+#show-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
