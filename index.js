@@ -12,26 +12,35 @@ let genIdStu = 0;
 
 
 class Student {
-  constructor (name, lastName, status, courses=[]) {
+  constructor (name, lastName, status, courses=[], display="") {
     this.name = name;
     this.lastName = lastName;
     this.status = status;
     this.courses = courses;
+    this.display = display;
   }
   addCourse (course) {
+    // this.display = "d-none";
     this.courses.push(course);
+    // this.courses[this.courses.length - 1].display = "d-none";
     course.students.push(this);
   }
 }
 
 class Course {
-  constructor (name, duration, students=[]) {
+  constructor (name, duration, students=[], display="") {
     this.name = name;
     this.duration = duration;
     this.students = students;
+    this.display = display;
   }
   addStudent (student) {
+    // this.display = "d-none";
     this.students.push(student);
+    // this.students[this.students.length - 1].display = "d-none";
+    // console.log(this.students[this.students.length - 1].display)
+    // console.log(this)
+    // console.log(courses)
     student.courses.push(this);
   } 
 }
@@ -47,7 +56,6 @@ function getCourses () {
     getStudents();
   });
 }
-getCourses();
 
 function getStudents () {
   fetch("https://code-the-dream-school.github.io/JSONStudentsApp.github.io/Students.json")
@@ -57,40 +65,51 @@ function getStudents () {
       students[genIdStu] = new Student(student.name, student.last_name, student.status);
       genIdStu++; 
     });
-    generateCoursesDropdown();
-    generateStudentsDropdown();
+    coursesDropdown = generateCoursesDropdown();
+    studentsDropdown = generateStudentsDropdown();
     generateCourses();
     generateStudents();
   });
 }
 
-function generateCoursesDropdown () {
-  coursesDropdown = `<select><option>Add course</option>`;
+function generateCoursesDropdown (courseId) {
+  let coursesDropdown = `<select><option>Add course</option>`;
   coursesDropdown += Object.entries(courses).reduce((acc, course) => {
-    return acc += `<option>${course[1].name}</option>`;
+    if (courseId !== course[0]) {
+      return acc += `<option class="" onclick="addCourse(this)" value="course${course[0]}">${course[1].name}</option>`;
+    }
   }, "");
-  coursesDropdown += `</select>`;
+  return coursesDropdown += `</select>`;
 }
 
-function generateStudentsDropdown () {
-  studentsDropdown = `<select><option>Add student</option>`;
+function generateStudentsDropdown (studentId) {
+  let studentsDropdown = `<select><option>Add student</option>`;
   studentsDropdown += Object.entries(students).reduce((acc, student) => {
-    return acc += `<option>${student[1].name} ${student[1].lastName}</option>`;
+    if (studentId !== student[0]) {
+      return acc += `<option class="" onclick="addStudent(this)" value="student${student[0]}">${student[1].name} ${student[1].lastName}</option>`;
+    }
   }, "");
-  studentsDropdown += `</select>`;
+  return studentsDropdown += `</select>`;
 }
 
-function generateCourses () {
+function generateCourses (sDrop, courseId) {
   let coursesDisplayed = Object.entries(courses).reduce((acc, course) => {
+    
+    let showStudents = course[1].students.reduce((acc, student) => {
+      return acc += `<p>${student.name} ${student.lastName}</p>`;
+    }, "");
+
     return acc += `
-      <div class="box">
+      <div id="course${course[0]}" class="box">
         <h4>${course[1].name}, ${course[1].duration}</h4>      
         <div>
+          ${showStudents}
         </div>
-        ${studentsDropdown}
+        ${course[0] === courseId ? sDrop : studentsDropdown}
       </div>
     `;
   }, "");
+
 
   coursesList = `
     <div class="cs-list">
@@ -99,14 +118,19 @@ function generateCourses () {
   `;
 }
 
-function generateStudents () {
+function generateStudents (cDrop, studentId) {
   let studentsDisplayed = Object.entries(students).reduce((acc, student) => {
+    let showCourses = student[1].courses.reduce((acc, course) => {
+      return acc += `<p>${course.name}</p>`;
+    }, "");
+
     return acc += `
-      <div class="box">
+      <div id="student${student[0]}" class="box">
         <h4>${student[1].name} ${student[1].lastName} <div class="circle ${student[1].status === true ? "green" : "red"}"></div></h4>      
         <div>
+          ${showCourses}
         </div>
-        ${coursesDropdown}
+        ${student[0] === studentId ? cDrop : coursesDropdown}
         <button>Edit info</button>
       </div>
     `;
@@ -119,8 +143,47 @@ function generateStudents () {
   `;
 }
 
+function addCourse (element) {
+  let studentId = element.parentElement.parentElement.id.split("student")[1];
+  let courseId = element.value.split("course")[1];
+  
+  if (students[studentId].courses.length < 4 && courses[courseId].students.length < 3) {
+    students[studentId].addCourse({...courses[courseId]});
+    let cDrop = generateCoursesDropdown(courseId);
+    let sDrop = generateStudentsDropdown(studentId);
+    generateCourses(sDrop, courseId);
+    generateStudents(cDrop, studentId);
+
+    studentsButton.click();
+    
+  } else {
+    alert(`Not avaliable`)
+  }
+}
+
+function addStudent (element) {
+  let studentId = element.value.split("student")[1];
+  let courseId = element.parentElement.parentElement.id.split("course")[1];
+
+  if (students[studentId].courses.length < 4 && courses[courseId].students.length < 3) {
+    courses[courseId].addStudent({...students[studentId]});
+    let cDrop = generateCoursesDropdown(courseId);
+    let sDrop = generateStudentsDropdown(studentId);
+    generateCourses(sDrop, courseId);
+    generateStudents(cDrop, studentId);
+    
+    coursesButton.click();
+
+  } else {
+    alert(`Not avaliable`)
+  }
+}
+
 studentsButton.addEventListener("click", () => showInfo.innerHTML = studentsList);
 coursesButton.addEventListener("click", () => showInfo.innerHTML = coursesList);
+
+getCourses();
+
 
 
 
