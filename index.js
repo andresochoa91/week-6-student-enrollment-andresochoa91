@@ -154,8 +154,6 @@ function generateStudents () {
 function editInfoButton (element) {
   students[element.parentElement.id.split("student")[1]].name = prompt("Enter your first name");
   students[element.parentElement.id.split("student")[1]].lastName = prompt("Enter your last name");
-  let status = prompt("Valid? yes or not").toLowerCase();
-  students[element.parentElement.id.split("student")[1]].status = (status === "yes" ? true : false);
 
   generateInfo()
 
@@ -178,7 +176,7 @@ function addCourse (element) {
   let courseId = element.value.split("course")[1];
   
   if (students[studentId].courses.length < 4 && courses[courseId].students.length < 3 && students[studentId].status === true) {
-    students[studentId].addCourse({...courses[courseId]});
+    students[studentId].addCourse(courses[courseId]);
     generateInfo()
 
     studentsButton.click();
@@ -193,7 +191,7 @@ function addStudent (element) {
   let courseId = element.parentElement.parentElement.id.split("course")[1];
 
   if (students[studentId].courses.length < 4 && courses[courseId].students.length < 3 && students[studentId].status === true) {
-    courses[courseId].addStudent({...students[studentId]});
+    courses[courseId].addStudent(students[studentId]);
     generateInfo()
     
     coursesButton.click();
