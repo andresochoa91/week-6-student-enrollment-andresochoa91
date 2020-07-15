@@ -4,3 +4,53 @@
   margin-top: 2%;
   text-align: center;
 }
+
+.box {
+  background-color: rgba(23, 162, 184, 0.2);
+  width: 250px;
+  height: 300px;
+  border: 1px solid #000;
+  margin: 10px;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+}
+
+.box h4 {
+  margin-bottom: 20px;
+}
+
+#show-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+select {
+  width: 123px;
+}
+
+.circle {
+  display: inline-block;
+  height: 17px;
+  width: 17px;
+  border-radius: 50%;
+}
+
+.green {
+  background-color: #0f0;
+}
+
+.red {
+  background-color: #f00;
+}
+
+.st-list,
+.cs-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+span {
+  font-size: 15px !important;
+}
