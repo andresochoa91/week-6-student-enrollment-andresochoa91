@@ -1,6 +1,7 @@
 let studentsButton = document.querySelector("#students");
 let coursesButton = document.querySelector("#courses");
 let showInfo = document.querySelector("#show-info");
+let newStudentButton = document.querySelector("#new_student");
 let studentsDropdown;
 let coursesDropdown;
 let studentsList;
@@ -56,10 +57,7 @@ function getStudents () {
       students[genIdStu] = new Student(student.name, student.last_name, student.status);
       genIdStu++; 
     });
-    generateCoursesDropdown();
-    generateStudentsDropdown();
-    generateCourses();
-    generateStudents();
+    generateInfo()
   });
 }
 
@@ -141,7 +139,7 @@ function generateStudents () {
           ${showCourses}
         </div>
         ${ddc}
-        <button>Edit info</button>
+        <button onclick="editInfoButton(this)">Edit info</button>
       </div>
     `;
   }, "");
@@ -153,21 +151,38 @@ function generateStudents () {
   `;
 }
 
+function editInfoButton (element) {
+  students[element.parentElement.id.split("student")[1]].name = prompt("Enter your first name");
+  students[element.parentElement.id.split("student")[1]].lastName = prompt("Enter your last name");
+  
+  generateInfo()
+
+  studentsButton.click();
+}
+
+function newStudent () {
+  let fName = prompt("Enter your first name");
+  let lName = prompt("Enter your last name");
+  let status = prompt("Valid?. yes or no");
+
+  students[genIdStu] = new Student(fName, lName, status.toLowerCase() === "yes" ? true : false);
+  genIdStu++;
+
+  generateInfo()
+}
+
 function addCourse (element) {
   let studentId = element.parentElement.parentElement.id.split("student")[1];
   let courseId = element.value.split("course")[1];
   
   if (students[studentId].courses.length < 4 && courses[courseId].students.length < 3) {
     students[studentId].addCourse({...courses[courseId]});
-    generateCoursesDropdown();
-    generateStudentsDropdown();
-    generateCourses();
-    generateStudents();
+    generateInfo()
 
     studentsButton.click();
     
   } else {
-    alert(`Not avaliable`)
+    alert("Not avaliable")
   }
 }
 
@@ -177,19 +192,28 @@ function addStudent (element) {
 
   if (students[studentId].courses.length < 4 && courses[courseId].students.length < 3) {
     courses[courseId].addStudent({...students[studentId]});
-    generateCoursesDropdown();
-    generateStudentsDropdown();
-    generateCourses();
-    generateStudents();
+    generateInfo()
     
     coursesButton.click();
 
   } else {
-    alert(`Not avaliable`)
+    alert("Not avaliable")
   }
 }
 
+
 studentsButton.addEventListener("click", () => showInfo.innerHTML = studentsList);
 coursesButton.addEventListener("click", () => showInfo.innerHTML = coursesList);
+newStudentButton.addEventListener("click", newStudent)
+
+function generateInfo () {
+  generateCoursesDropdown();
+  generateStudentsDropdown();
+  generateCourses();
+  generateStudents();
+
+  studentsButton.click();
+
+}
 
 getCourses();
