@@ -6,10 +6,17 @@
 }
 
 .box {
+  background-color: rgba(23, 162, 184, 0.2);
   width: 250px;
   height: 300px;
   border: 1px solid #000;
   margin: 10px;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+}
+
+.box h4 {
+  margin-bottom: 20px;
 }
 
 #show-info {
@@ -19,13 +26,13 @@
 }
 
 select {
-  width: 120px;
+  width: 123px;
 }
 
 .circle {
   display: inline-block;
-  height: 30px;
-  width: 30px;
+  height: 17px;
+  width: 17px;
   border-radius: 50%;
 }
 
@@ -42,4 +49,8 @@ select {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+span {
+  font-size: 15px !important;
 }

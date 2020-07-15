@@ -96,8 +96,8 @@ function generateCourses () {
     dds += `</select>`;
 
     return acc += `
-      <div id="course${course[0]}" class="box">
-        <h4>${course[1].name}, ${course[1].duration}</h4>      
+      <div id="course${course[0]}" class="box p-3">
+        <h4>${course[1].name}<br> <span class="badge badge-success">${course[1].duration}</span></h4>      
         <div>
           ${showStudents}
         </div>
@@ -117,7 +117,7 @@ function generateCourses () {
 function generateStudents () {
   let studentsDisplayed = Object.entries(students).reduce((acc, student) => {
     let dropdrop = [];
-    let ddc = `<select><option>Add course</option>`;
+    let ddc = `<select class="btn btn-outline-primary"><option>Add course</option>`;
 
     let showCourses = student[1].courses.reduce((acc, course) => {
       dropdrop.push(course.name)
@@ -133,13 +133,13 @@ function generateStudents () {
     ddc += `</select>`;
 
     return acc += `
-      <div id="student${student[0]}" class="box">
+      <div id="student${student[0]}" class="box p-3">
         <h4>${student[1].name} ${student[1].lastName} <div class="circle ${student[1].status === true ? "green" : "red"}"></div></h4>      
         <div>
           ${showCourses}
         </div>
         ${ddc}
-        <button onclick="editInfoButton(this)">Edit info</button>
+        <button class="btn btn-primary" onclick="editInfoButton(this)">Edit info</button>
       </div>
     `;
   }, "");
@@ -154,7 +154,9 @@ function generateStudents () {
 function editInfoButton (element) {
   students[element.parentElement.id.split("student")[1]].name = prompt("Enter your first name");
   students[element.parentElement.id.split("student")[1]].lastName = prompt("Enter your last name");
-  
+  let status = prompt("Valid? yes or not").toLowerCase();
+  students[element.parentElement.id.split("student")[1]].status = (status === "yes" ? true : false);
+
   generateInfo()
 
   studentsButton.click();
@@ -163,7 +165,7 @@ function editInfoButton (element) {
 function newStudent () {
   let fName = prompt("Enter your first name");
   let lName = prompt("Enter your last name");
-  let status = prompt("Valid?. yes or no");
+  let status = prompt("Valid?. yes or not");
 
   students[genIdStu] = new Student(fName, lName, status.toLowerCase() === "yes" ? true : false);
   genIdStu++;
@@ -175,7 +177,7 @@ function addCourse (element) {
   let studentId = element.parentElement.parentElement.id.split("student")[1];
   let courseId = element.value.split("course")[1];
   
-  if (students[studentId].courses.length < 4 && courses[courseId].students.length < 3) {
+  if (students[studentId].courses.length < 4 && courses[courseId].students.length < 3 && students[studentId].status === true) {
     students[studentId].addCourse({...courses[courseId]});
     generateInfo()
 
@@ -190,7 +192,7 @@ function addStudent (element) {
   let studentId = element.value.split("student")[1];
   let courseId = element.parentElement.parentElement.id.split("course")[1];
 
-  if (students[studentId].courses.length < 4 && courses[courseId].students.length < 3) {
+  if (students[studentId].courses.length < 4 && courses[courseId].students.length < 3 && students[studentId].status === true) {
     courses[courseId].addStudent({...students[studentId]});
     generateInfo()
     
