@@ -163,12 +163,25 @@ function editInfoButton (element) {
 function newStudent () {
   let fName = prompt("Enter your first name");
   let lName = prompt("Enter your last name");
-  let status = prompt("Valid?. yes or not");
 
-  students[genIdStu] = new Student(fName, lName, status.toLowerCase() === "yes" ? true : false);
-  genIdStu++;
-
-  generateInfo()
+  fetch("https://student-challenge-api.herokuapp.com/students", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: fName,
+      last_name: lName
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert(data.message);
+    students[data.student.id] = new Student(data.student.name, data.student.last_name, data.student.status);
+    genIdStu++;
+    generateInfo()
+  })
+  .catch("Not possible to add new student") 
 }
 
 function addCourse (element) {
