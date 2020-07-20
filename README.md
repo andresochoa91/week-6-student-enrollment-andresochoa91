@@ -1,4 +1,5 @@
-# Front End 1 Week 6 Assignment Directions
+# front-end-1-section-5-andresochoa91
+front-end-1-section-5-andresochoa91 created by GitHub Classroom
 
 Now you know how to create webpages using HTML, CSS and JavaScript. You also know how to use links between pages, Bootstrap and fetching data.
 
@@ -32,9 +33,10 @@ This is an Example
 <img src = "./images/courses.png"/>
 
 
-**If the user clicks "New Student":** the program allows the user to register a new student to the data base and enroll them to a new course
+**If the user clicks "New Student":** the program allows the user to register a new student by posting an object to the following POST endpoint - https://student-challenge-api.herokuapp.com/students that contains a "name" and a "last_name" attribute. If it successful you will receive back a success messaage and the new student in the response along with their id. 
+note: it will not show up in the array of students when you do a GET request (it is not hooked up to a database) this is just to simulate posting data to a database:
 
-
+GET endpoints
 
 Students data link:
 https://code-the-dream-school.github.io/JSONStudentsApp.github.io/Students.json
@@ -43,3 +45,4 @@ The response is a json Array of students objects with the following properties: 
 Courses data link:
 https://code-the-dream-school.github.io/JSONStudentsApp.github.io/Courses.json
 The response is a json Array of courses objects with the following properties: name, duration, and id.
+
